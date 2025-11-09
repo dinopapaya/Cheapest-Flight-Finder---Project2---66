@@ -4,9 +4,11 @@
 
 # Project Title: Cheapest Flight Finder
 
-### Problem: Sometimes it is difficult to find the cheapest flight to a certain place online; the project will find the best path minimizing generalized cost.
+### Problem: Finding the cheapest flight itinerary to a given destination can be time-consuming and confusing due to the large number of airlines, fluctuating prices, and the variety of direct and multi-leg options available. This project automates the process by computing the most cost-effective flight route between two airports in the United States using real flight route data.  
 
-### Motivation: We want to be able to find the minimum price for a flight. The project will look at direct flights and multi-leg paths, ultimately outputting the most cost effective path.
+
+### Motivation: Travelers often spend hours comparing prices across booking platforms. Our project simplifies this process by modeling flights as a **weighted graph** and applying **shortest-path algorithms** to find the optimal (minimum-cost) route.  The goal is to provide an interactive, visual tool that helps users quickly understand the cheapest way to travel across the U.S.  
+
 
 ### Data: All Airline Flight Routes in the US (Kaggle).
 
