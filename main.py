@@ -60,3 +60,14 @@ def main(argv: Iterable[str] | None = None) -> int:
         comparison[key] = {"label": label, "cost": cost, "path": path, "runtime": runtime}
 
     chosen = comparison[args.algorithm]
+
+    if not chosen["path"]:
+        print("No route was found between the selected airports.")
+        return 1
+
+    segments = summarise_path(chosen["path"], metadata)
+
+    print(f"Cheapest itinerary from {origin} to {destination} using {ALGORITHMS[args.algorithm][0]}:")
+    for segment in segments:
+        print("  •", format_segment(segment))
+    print(f"Total fare: ${chosen['cost']:,.2f}")
