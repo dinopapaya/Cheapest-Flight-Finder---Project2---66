@@ -44,3 +44,46 @@ def load_route_dataframe(csv_path: str) -> pd.DataFrame:
     trimmed = df[required_columns].dropna(subset=["fare", "airport_1", "airport_2"])
     trimmed["fare"] = trimmed["fare"].astype(float)
     return trimmed
+
+def build_graph(
+    dataframe: pd.DataFrame,
+) -> Tuple[Graph, Dict[Tuple[str, str], RouteMetadata]]:
+    graph: Graph = defaultdict(dict)
+    metadata: Dict[Tuple[str, str], RouteMetadata] = {}
+
+    for row in dataframe.to_dict(orient="records"):
+        record = _build_metadata_row(row)
+
+        if not record.origin_airport or not record.destination_airport:
+            continue
+
+        current = graph[record.origin_airport].get(record.destination_airport)
+        if current is None or record.fare < current:
+            graph[record.origin_airport][record.destination_airport] = record.fare
+            metadata[(record.origin_airport, record.destination_airport)] = record
+
+        reverse = metadata.get((record.destination_airport, record.origin_airport))
+        if reverse is None or record.fare < reverse.fare:
+            mirrored = RouteMetadata(
+                origin_city=record.destination_city,
+                destination_city=record.origin_city,
+                origin_airport=record.destination_airport,
+                destination_airport=record.origin_airport,
+                fare=record.fare,
+                passengers=record.passengers,
+                miles=record.miles,
+                primary_carrier=record.primary_carrier,
+            )
+            graph[record.destination_airport][record.origin_airport] = record.fare
+            metadata[(record.destination_airport, record.origin_airport)] = mirrored
+
+    return graph, metadata
+
+def build_city_airport_lookup(dataframe: pd.DataFrame) -> Dict[str, List[str]]:
+    city_to_airports: Dict[str, set] = defaultdict(set)
+
+    for row in dataframe.to_dict(orient="records"):
+        city_to_airports[str(row["city1"]).strip()].add(str(row["airport_1"]).strip())
+        city_to_airports[str(row["city2"]).strip()].add(str(row["airport_2"]).strip())
+
+    return {city: sorted(airports) for city, airports in city_to_airports.items()}
