@@ -17,6 +17,13 @@
    ```bash
    pip install -r requirements.txt
    ```
+4. ## Command-line usage
+
+You can inspect the cheapest fare between two airports directly from the terminal:
+
+```bash
+python main.py ABE PIE
+```
 
 ## Team Name: Aviation
 
