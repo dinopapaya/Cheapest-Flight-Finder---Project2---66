@@ -160,3 +160,42 @@ def main():
 
         selected_label = st.selectbox("Primary algorithm", algorithm_labels, index=0)
         selected_algorithm_key = label_to_key[selected_label]
+
+    algorithm_results = {}
+    for key, entry in ALGORITHMS.items():
+        cost, path, pair, runtime = _execute_solver(graph, entry["solver"],
+                                                    origin_airports, destination_airports, auto_select)
+        algorithm_results[key] = {"label": entry["label"], "cost": cost,
+                                  "path": path, "pair": pair, "runtime": runtime}
+
+    selected_result = algorithm_results[selected_algorithm_key]
+    if not selected_result["path"]:
+        st.error("No route found.")
+        st.stop()
+
+    st.subheader("Itinerary Summary")
+    st.write(f"Cheapest route: {_format_money(selected_result['cost'])}")
+    segments = summarise_path(selected_result["path"], metadata)
+    summary_table = _build_route_table(segments)
+    st.dataframe(summary_table, use_container_width=True)
+
+    st.subheader("Algorithm Comparison")
+    cols = st.columns(len(ALGORITHMS))
+    for col, (k, result) in zip(cols, algorithm_results.items()):
+        with col:
+            st.markdown(f"**{result['label']}**")
+            if result["path"]:
+                st.metric("Total fare", _format_money(result["cost"]))
+                st.metric("Runtime", f"{result['runtime'] * 1000:.2f} ms")
+            else:
+                st.write("No route found.")
+
+    st.subheader("Interactive Map")
+    route_map = _build_route_map(selected_result["path"])
+    if route_map:
+        st_folium(route_map, width=None, height=500)
+    else:
+        st.info("Unable to render map for missing airport data.")
+
+if __name__ == "__main__":
+    main()
