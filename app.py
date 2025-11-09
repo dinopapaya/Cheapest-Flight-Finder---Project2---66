@@ -52,3 +52,34 @@ def load_graph_assets(path: str = DATASET_PATH):
 @st.cache_resource(show_spinner=False)
 def load_airport_directory():
     return load_airports("IATA")
+
+def _format_money(value: float) -> str:
+    return f"${value:,.2f}"
+
+def _find_best_route(graph: Graph, start_airports: Sequence[str],
+                     end_airports: Sequence[str], solver: AlgorithmSolver):
+    best_cost = float("inf")
+    best_path: List[str] = []
+    best_pair = None
+    for origin, destination in product(start_airports, end_airports):
+        cost, path = solver(graph, origin, destination)
+        if path and cost < best_cost:
+            best_cost, best_path, best_pair = cost, path, (origin, destination)
+    if not best_path:
+        return float("inf"), [], None
+    return best_cost, best_path, best_pair
+
+def _execute_solver(graph: Graph, solver: AlgorithmSolver,
+                    origin_airports: Sequence[str],
+                    destination_airports: Sequence[str],
+                    auto_select: bool):
+    start_time = time.perf_counter()
+    if auto_select:
+        cost, path, pair = _find_best_route(graph, origin_airports, destination_airports, solver)
+    else:
+        origin = origin_airports[0]
+        destination = destination_airports[0]
+        cost, path = solver(graph, origin, destination)
+        pair = (origin, destination) if path else None
+    runtime = time.perf_counter() - start_time
+    return cost, path, pair, runtime
