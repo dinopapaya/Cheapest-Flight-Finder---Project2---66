@@ -53,3 +53,10 @@ def main(argv: Iterable[str] | None = None) -> int:
     destination = args.destination.upper()
     
     comparison = {}
+    for key, (label, solver) in ALGORITHMS.items():
+        start_time = time.perf_counter()
+        cost, path = solver(graph, origin, destination)
+        runtime = time.perf_counter() - start_time
+        comparison[key] = {"label": label, "cost": cost, "path": path, "runtime": runtime}
+
+    chosen = comparison[args.algorithm]
