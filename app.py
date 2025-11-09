@@ -120,3 +120,43 @@ def _build_route_map(path: Sequence[str]) -> folium.Map | None:
         popup = "\n".join(filter(None, [name, city]))
         folium.Marker((lat, lon), tooltip=tooltip, popup=popup).add_to(route_map)
     return route_map
+
+def main():
+    st.set_page_config(page_title="Cheapest Flight Finder", page_icon="✈️", layout="wide")
+    st.title("Cheapest Flight Finder")
+    st.markdown("Use this tool to explore the most affordable itineraries across the U.S.")
+
+    _dataframe, graph, metadata, city_lookup = load_graph_assets(DATASET_PATH)
+    airports = sorted(graph.keys())
+    cities = sorted(city_lookup.keys())
+
+    with st.sidebar:
+        st.header("Route Options")
+        mode = st.radio("Search by:", ("Airport to airport", "City to city"))
+        auto_select = False
+        origin_city = destination_city = ""
+        algorithm_labels = [a["label"] for a in ALGORITHMS.values()]
+        label_to_key = {a["label"]: k for k, a in ALGORITHMS.items()}
+
+        if mode == "Airport to airport":
+            origin_airports = [st.selectbox("Origin airport", airports)]
+            destination_airports = [st.selectbox("Destination airport", airports)]
+            origin_label_base, destination_label_base = origin_airports[0], destination_airports[0]
+        else:
+            origin_city = st.selectbox("Origin city", cities)
+            destination_city = st.selectbox("Destination city", cities)
+            origin_options = city_lookup.get(origin_city, [])
+            destination_options = city_lookup.get(destination_city, [])
+            if not origin_options or not destination_options:
+                st.error("The selected cities do not have airports in the dataset.")
+                st.stop()
+            auto_select = st.checkbox("Automatically pick cheapest combination", value=True)
+            if auto_select:
+                origin_airports, destination_airports = origin_options, destination_options
+            else:
+                origin_airports = [st.selectbox("Origin airport", origin_options)]
+                destination_airports = [st.selectbox("Destination airport", destination_options)]
+            origin_label_base, destination_label_base = origin_city, destination_city
+
+        selected_label = st.selectbox("Primary algorithm", algorithm_labels, index=0)
+        selected_algorithm_key = label_to_key[selected_label]
