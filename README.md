@@ -34,21 +34,24 @@
 
 ### Tools:
 
+•	Python: Core implementation of Dijkstra’s and Bellman-Ford algorithms for efficient shortest path computation. Used for visualization, data handling, and integration between backend logic and front-end interface.
+•	Streamlit: Builds an interactive web application interface.
+•	Folium: Generates interactive maps to visualize the shortest flight path.
+•	Pandas: Used for efficient data loading and preprocessing of the flight dataset.
+
 ### Algorithm implementation: Python
 
 ### Visualization: Python(using Streamlist and Folium for interactive map displays)
 
 ### Visuals: The system will visualize the algorithm’s pathfinding process and final results using Streamlit and Folium.
 
-### Strategy: We model the flight network as a weighted graph, where cities represent nodes and flights represent edges with associated costs. Using Dijkstra’s algorithm, we will compute the shortest (minimum-cost) path between two cities, ensuring that all edge weights(flight costs) are non-negative.
-
 ### Distribution:
 
 #### Anish: Implementing the Dijkstra algorithm.
 
-#### Siddharth: Development of the visualization and the user interface to illustrate the pathfinding process.
+#### Siddharth: Designed and implemented the Python-based visualization interface using Streamlit and Folium. Also contributed to algorithm testing and integration between backend and frontend.
 
-#### Anish: Assisting both algorithm development and visualization integration.
+#### Anish: Focused on developing and debugging the graph algorithms (Dijkstra and Bellman-Ford) in Python, ensuring efficiency and correctness. Also assisted in data preprocessing and system testing.
 
 ### Reference:
 
