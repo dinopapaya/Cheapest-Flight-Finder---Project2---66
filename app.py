@@ -83,3 +83,40 @@ def _execute_solver(graph: Graph, solver: AlgorithmSolver,
         pair = (origin, destination) if path else None
     runtime = time.perf_counter() - start_time
     return cost, path, pair, runtime
+
+def _build_route_table(segments) -> pd.DataFrame:
+    rows = []
+    for segment in segments:
+        rows.append({
+            "From": f"{segment.origin_city} ({segment.origin_airport})",
+            "To": f"{segment.destination_city} ({segment.destination_airport})",
+            "Fare": segment.fare,
+            "Primary Carrier": segment.primary_carrier or "—",
+            "Passengers": segment.passengers,
+            "Distance (miles)": segment.miles,
+        })
+    frame = pd.DataFrame(rows)
+    if not frame.empty:
+        frame["Fare"] = frame["Fare"].map(lambda v: f"${v:,.2f}")
+        frame["Passengers"] = frame["Passengers"].map(lambda v: f"{v:,.0f}" if pd.notna(v) else "—")
+        frame["Distance (miles)"] = frame["Distance (miles)"].map(lambda v: f"{v:,.0f}" if pd.notna(v) else "—")
+    return frame
+
+def _build_route_map(path: Sequence[str]) -> folium.Map | None:
+    directory = load_airport_directory()
+    coordinates: List[Tuple[float, float]] = []
+    for airport_code in path:
+        record = directory.get(airport_code)
+        if record:
+            coordinates.append((record["lat"], record["lon"], record.get("name"), record.get("city")))
+    if len(coordinates) < 2:
+        return None
+    avg_lat = sum(lat for lat, *_ in coordinates) / len(coordinates)
+    avg_lon = sum(lon for _, lon, *_ in coordinates) / len(coordinates)
+    route_map = folium.Map(location=(avg_lat, avg_lon), zoom_start=4)
+    folium.PolyLine([(lat, lon) for lat, lon, *_ in coordinates], color="blue", weight=4).add_to(route_map)
+    for code, (lat, lon, name, city) in zip(path, coordinates):
+        tooltip = f"{code} — {city or 'Unknown city'}"
+        popup = "\n".join(filter(None, [name, city]))
+        folium.Marker((lat, lon), tooltip=tooltip, popup=popup).add_to(route_map)
+    return route_map
