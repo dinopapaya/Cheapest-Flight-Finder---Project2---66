@@ -45,6 +45,29 @@ def load_route_dataframe(csv_path: str) -> pd.DataFrame:
     trimmed["fare"] = trimmed["fare"].astype(float)
     return trimmed
 
+def _build_metadata_row(row: Mapping[str, object]) -> RouteMetadata:
+    origin_city = str(row["city1"]).strip()
+    dest_city = str(row["city2"]).strip()
+    origin_airport = str(row["airport_1"]).strip()
+    dest_airport = str(row["airport_2"]).strip()
+    fare = float(row["fare"])
+    passengers = None if pd.isna(row["passengers"]) else float(row["passengers"])
+    miles = None if pd.isna(row["nsmiles"]) else float(row["nsmiles"])
+
+    carrier = row.get("carrier_low") or row.get("carrier_lg")
+    carrier_str = None if pd.isna(carrier) else str(carrier)
+
+    return RouteMetadata(
+        origin_city=origin_city,
+        destination_city=dest_city,
+        origin_airport=origin_airport,
+        destination_airport=dest_airport,
+        fare=fare,
+        passengers=passengers,
+        miles=miles,
+        primary_carrier=carrier_str,
+    )
+
 def build_graph(
     dataframe: pd.DataFrame,
 ) -> Tuple[Graph, Dict[Tuple[str, str], RouteMetadata]]:
