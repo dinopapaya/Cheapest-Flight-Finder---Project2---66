@@ -42,3 +42,14 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
         help="Select the primary shortest-path algorithm to use.",
     )
     return parser.parse_args(argv)
+
+def main(argv: Iterable[str] | None = None) -> int:
+    args = parse_args(argv)
+    
+    dataframe = load_route_dataframe(args.dataset)
+    graph, metadata = build_graph(dataframe)
+
+    origin = args.origin.upper()
+    destination = args.destination.upper()
+    
+    comparison = {}
