@@ -34,10 +34,10 @@
 
 ### Tools:
 
-•	Python: Core implementation of Dijkstra’s and Bellman-Ford algorithms for efficient shortest path computation. Used for visualization, data handling, and integration between backend logic and front-end interface.
-•	Streamlit: Builds an interactive web application interface.
-•	Folium: Generates interactive maps to visualize the shortest flight path.
-•	Pandas: Used for efficient data loading and preprocessing of the flight dataset.
+#### Python: Core implementation of Dijkstra’s and Bellman-Ford algorithms for efficient shortest path computation. Used for visualization, data handling, and integration between backend logic and front-end interface.
+#### Streamlit: Builds an interactive web application interface.
+#### Folium: Generates interactive maps to visualize the shortest flight path.
+#### Pandas: Used for efficient data loading and preprocessing of the flight dataset.
 
 ### Algorithm implementation: Python
 
