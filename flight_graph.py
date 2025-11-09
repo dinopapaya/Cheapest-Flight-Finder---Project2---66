@@ -102,6 +102,31 @@ def build_graph(
 
     return graph, metadata
 
+def dijkstra(graph: Graph, start: str, end: str) -> Tuple[float, List[str]]:
+    if start not in graph or end not in graph:
+        return float("inf"), []
+
+    frontier: List[Tuple[float, str, List[str]]] = [(0.0, start, [start])]
+    best_costs = {start: 0.0}
+    visited = set()
+
+    while frontier:
+        cost, airport, path = heapq.heappop(frontier)
+        if airport in visited:
+            continue
+        visited.add(airport)
+
+        if airport == end:
+            return cost, path
+
+        for neighbour, fare in graph[airport].items():
+            new_cost = cost + fare
+            if new_cost < best_costs.get(neighbour, float("inf")):
+                best_costs[neighbour] = new_cost
+                heapq.heappush(frontier, (new_cost, neighbour, path + [neighbour]))
+
+    return float("inf"), []
+
 def build_city_airport_lookup(dataframe: pd.DataFrame) -> Dict[str, List[str]]:
     city_to_airports: Dict[str, set] = defaultdict(set)
 
