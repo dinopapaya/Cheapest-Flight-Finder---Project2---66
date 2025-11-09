@@ -127,6 +127,55 @@ def dijkstra(graph: Graph, start: str, end: str) -> Tuple[float, List[str]]:
 
     return float("inf"), []
 
+def bellman_ford(graph: Graph, start: str, end: str) -> Tuple[float, List[str]]:
+    nodes = set(graph.keys())
+    edges: List[Tuple[str, str, float]] = []
+    for origin, neighbours in graph.items():
+        for destination, fare in neighbours.items():
+            nodes.add(destination)
+            edges.append((origin, destination, fare))
+
+    if start == end and start in nodes:
+        return 0.0, [start]
+
+    if start not in nodes or end not in nodes:
+        return float("inf"), []
+
+    distance = {node: math.inf for node in nodes}
+    predecessor: Dict[str, str] = {}
+    distance[start] = 0.0
+
+    for _ in range(len(nodes) - 1):
+        updated = False
+        for origin, destination, fare in edges:
+            if math.isinf(distance[origin]):
+                continue
+            new_cost = distance[origin] + fare
+            if new_cost < distance[destination]:
+                distance[destination] = new_cost
+                predecessor[destination] = origin
+                updated = True
+        if not updated:
+            break
+
+    for origin, destination, fare in edges:
+        if math.isinf(distance[origin]):
+            continue
+        if distance[origin] + fare < distance[destination] - 1e-12:
+            raise ValueError("Graph contains a negative-weight cycle")
+
+    if math.isinf(distance[end]):
+        return float("inf"), []
+
+    path = [end]
+    while path[-1] != start:
+        predecessor_node = predecessor.get(path[-1])
+        if predecessor_node is None:
+            return float("inf"), []
+        path.append(predecessor_node)
+    path.reverse()
+    return distance[end], path
+
 def build_city_airport_lookup(dataframe: pd.DataFrame) -> Dict[str, List[str]]:
     city_to_airports: Dict[str, set] = defaultdict(set)
 
