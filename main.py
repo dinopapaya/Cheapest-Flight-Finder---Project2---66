@@ -81,3 +81,6 @@ def main(argv: Iterable[str] | None = None) -> int:
             f" {marker} {result['label']:<20} | {cost_display:<15} | {runtime_ms:7.2f} ms"
         )
     return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
