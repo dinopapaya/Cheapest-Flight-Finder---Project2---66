@@ -19,9 +19,17 @@
    ```
    
 4. **Command-line usage:**
-   You can inspect the cheapest fare between two airports directly from the terminal:
+   ****You can inspect the cheapest fare between two airports directly from the terminal:****
    ```bash
    python main.py ABE PIE
+   ```
+
+5. **Streamlit dashboard:**
+   
+   ****Launch the interactive dashboard to explore routes visually:****
+   
+   ```bash
+   streamlit run app.py
    ```
 
 ## Team Name: Aviation
