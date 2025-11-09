@@ -25,3 +25,20 @@ def format_segment(segment) -> str:
         f"{segment.origin_airport} → {segment.destination_airport}: ${segment.fare:,.2f}"
         f"{carrier}{distance}"
     )
+
+def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Find the cheapest flight between two airports.")
+    parser.add_argument("origin", help="IATA code of the origin airport (e.g. ABE)")
+    parser.add_argument("destination", help="IATA code of the destination airport (e.g. PIE)")
+    parser.add_argument(
+        "--dataset",
+        default="Aviation.csv",
+        help="Path to the Kaggle aviation dataset (defaults to Aviation.csv in the repo).",
+    )
+    parser.add_argument(
+        "--algorithm",
+        choices=tuple(ALGORITHMS.keys()),
+        default="dijkstra",
+        help="Select the primary shortest-path algorithm to use.",
+    )
+    return parser.parse_args(argv)
