@@ -7,7 +7,7 @@
    cd Cheapest-Flight-Finder---Project2---66
    ```
 
-2. **Create and activate a virtual environment (Command Prompt):**
+2. **Create and activate a virtual environment:**
    ```bash
    py -m venv .venv
    .venv\Scripts\activate
