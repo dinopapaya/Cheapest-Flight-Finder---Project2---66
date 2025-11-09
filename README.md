@@ -1,6 +1,6 @@
 ## Team Name: Aviation
 
-## Team Members: Zhuen Zhong, Siddharth Bandaru, Anish Gude
+## Team Members: Siddharth Bandaru and Anish Gude
 
 # Project Title: Cheapest Flight Finder
 
@@ -22,7 +22,7 @@
 
 ### Distribution:
 
-#### Zhuen: Implementing the Dijkstra algorithm.
+#### Anish: Implementing the Dijkstra algorithm.
 
 #### Siddharth: Development of the visualization and the user interface to illustrate the pathfinding process.
 
