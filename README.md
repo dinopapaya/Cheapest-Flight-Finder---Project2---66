@@ -1,3 +1,23 @@
+## Follow these directions to run the code
+
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/dinopapaya/Cheapest-Flight-Finder---Project2---66.git
+   cd Cheapest-Flight-Finder---Project2---66
+   ```
+
+2. **Create and activate a virtual environment (Command Prompt):**
+   ```bash
+   py -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
 ## Team Name: Aviation
 
 ## Team Members: Siddharth Bandaru and Anish Gude
