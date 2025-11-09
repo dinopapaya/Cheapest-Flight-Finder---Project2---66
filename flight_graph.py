@@ -176,6 +176,19 @@ def bellman_ford(graph: Graph, start: str, end: str) -> Tuple[float, List[str]]:
     path.reverse()
     return distance[end], path
 
+def summarise_path(
+    path: Sequence[str],
+    metadata: Mapping[Tuple[str, str], RouteMetadata],
+) -> List[RouteMetadata]:
+
+    segments: List[RouteMetadata] = []
+    for origin, destination in zip(path, path[1:]):
+        info = metadata.get((origin, destination))
+        if info is None:
+            raise KeyError(f"Missing metadata for segment {origin}->{destination}")
+        segments.append(info)
+    return segments
+
 def build_city_airport_lookup(dataframe: pd.DataFrame) -> Dict[str, List[str]]:
     city_to_airports: Dict[str, set] = defaultdict(set)
 
