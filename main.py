@@ -71,3 +71,13 @@ def main(argv: Iterable[str] | None = None) -> int:
     for segment in segments:
         print("  •", format_segment(segment))
     print(f"Total fare: ${chosen['cost']:,.2f}")
+
+    print("\nAlgorithm comparison:")
+    for key, result in comparison.items():
+        cost_display = f"${result['cost']:,.2f}" if result["path"] else "No route"
+        runtime_ms = result["runtime"] * 1000
+        marker = "→" if key == args.algorithm else " "
+        print(
+            f" {marker} {result['label']:<20} | {cost_display:<15} | {runtime_ms:7.2f} ms"
+        )
+    return 0
